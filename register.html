@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Create Account | Digital Equb</title>
 
   <style>
@@ -113,9 +112,7 @@
 
   <div class="box">
 
-    <div class="logo">
-      💰 Digital Equb
-    </div>
+    <div class="logo">💰 Digital Equb</div>
 
     <p class="subtitle">
       Create your account
@@ -124,7 +121,6 @@
     <form id="registerForm">
 
       <label for="name">Full Name</label>
-
       <input
         type="text"
         id="name"
@@ -133,7 +129,6 @@
       >
 
       <label for="email">Email</label>
-
       <input
         type="email"
         id="email"
@@ -142,7 +137,6 @@
       >
 
       <label for="password">Password</label>
-
       <input
         type="password"
         id="password"
@@ -151,10 +145,7 @@
         required
       >
 
-      <label for="confirmPassword">
-        Confirm Password
-      </label>
-
+      <label for="confirmPassword">Confirm Password</label>
       <input
         type="password"
         id="confirmPassword"
@@ -183,45 +174,27 @@
   </div>
 
 
-  <script type="module">
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-auth-compat.js"></script>
 
-    import {
-      initializeApp
-    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
 
-    import {
-      getAuth,
-      createUserWithEmailAndPassword
-    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-
+  <script>
 
     const firebaseConfig = {
-
-      apiKey:
-        "AIzaSyAcjwzfF1qwTilmhDcKc1WU2DCJqtNWprE",
-
-      authDomain:
-        "digital-equb-9f71e.firebaseapp.com",
-
-      projectId:
-        "digital-equb-9f71e",
-
-      storageBucket:
-        "digital-equb-9f71e.firebasestorage.app",
-
-      messagingSenderId:
-        "973949186370",
-
-      appId:
-        "1:973949186370:web:825cc92317f8d97a2998db"
+      apiKey: "AIzaSyAcjwzfF1qwTilmhDcKc1WU2DCJqtNWprE",
+      authDomain: "digital-equb-9f71e.firebaseapp.com",
+      projectId: "digital-equb-9f71e",
+      storageBucket: "digital-equb-9f71e.firebasestorage.app",
+      messagingSenderId: "973949186370",
+      appId: "1:973949186370:web:825cc92317f8d97a2998db"
     };
 
 
-    const app =
-      initializeApp(firebaseConfig);
+    // Start Firebase
+    firebase.initializeApp(firebaseConfig);
 
-    const auth =
-      getAuth(app);
+    const auth = firebase.auth();
 
 
     const form =
@@ -234,63 +207,67 @@
       document.getElementById("message");
 
 
-    form.addEventListener(
-      "submit",
-      async function(event) {
+    form.addEventListener("submit", function(event) {
 
-        event.preventDefault();
+      event.preventDefault();
 
 
-        const name =
-          document.getElementById("name").value.trim();
+      const name =
+        document.getElementById("name").value.trim();
 
-        const email =
-          document.getElementById("email").value.trim();
+      const email =
+        document.getElementById("email").value.trim();
 
-        const password =
-          document.getElementById("password").value;
+      const password =
+        document.getElementById("password").value;
 
-        const confirmPassword =
-          document.getElementById("confirmPassword").value;
-
-
-        message.textContent = "";
+      const confirmPassword =
+        document.getElementById("confirmPassword").value;
 
 
-        if (password !== confirmPassword) {
-
-          message.style.color = "red";
-
-          message.textContent =
-            "❌ Passwords do not match.";
-
-          return;
-        }
+      message.style.color = "#111827";
+      message.textContent = "Please wait...";
 
 
-        if (password.length < 6) {
+      if (password !== confirmPassword) {
 
-          message.style.color = "red";
+        message.style.color = "red";
 
-          message.textContent =
-            "❌ Password must be at least 6 characters.";
+        message.textContent =
+          "❌ Passwords do not match.";
 
-          return;
-        }
-
-
-        button.disabled = true;
-
-        button.textContent =
-          "Creating account...";
+        return;
+      }
 
 
-        try {
+      if (password.length < 6) {
 
-          await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
+        message.style.color = "red";
+
+        message.textContent =
+          "❌ Password must be at least 6 characters.";
+
+        return;
+      }
+
+
+      button.disabled = true;
+
+      button.textContent =
+        "Creating account...";
+
+
+      auth
+        .createUserWithEmailAndPassword(
+          email,
+          password
+        )
+
+        .then(function(userCredential) {
+
+          console.log(
+            "Account created:",
+            userCredential.user
           );
 
 
@@ -301,7 +278,7 @@
 
 
           button.textContent =
-            "Account Created ✓";
+            "Success ✓";
 
 
           setTimeout(function() {
@@ -311,10 +288,15 @@
 
           }, 1500);
 
+        })
 
-        } catch (error) {
+        .catch(function(error) {
 
-          console.error(error);
+          console.error(
+            "Firebase error:",
+            error
+          );
+
 
           message.style.color = "red";
 
@@ -355,7 +337,7 @@
           ) {
 
             message.textContent =
-              "❌ Check your internet connection.";
+              "❌ Network error. Check your internet.";
 
           }
 
@@ -372,10 +354,9 @@
           button.textContent =
             "Create Account";
 
-        }
+        });
 
-      }
-    );
+    });
 
   </script>
 
