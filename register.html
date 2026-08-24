@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,8 +16,8 @@
     body {
       min-height: 100vh;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       padding: 20px;
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #111827, #243b55);
@@ -35,7 +34,7 @@
 
     .logo {
       text-align: center;
-      font-size: 30px;
+      font-size: 28px;
       font-weight: bold;
       margin-bottom: 8px;
     }
@@ -43,7 +42,7 @@
     .subtitle {
       text-align: center;
       color: #667085;
-      margin-bottom: 28px;
+      margin-bottom: 25px;
     }
 
     label {
@@ -55,7 +54,7 @@
     input {
       width: 100%;
       padding: 13px;
-      margin-bottom: 17px;
+      margin-bottom: 16px;
       border: 1px solid #d0d5dd;
       border-radius: 9px;
       font-size: 16px;
@@ -80,7 +79,6 @@
 
     button:disabled {
       opacity: .6;
-      cursor: not-allowed;
     }
 
     #message {
@@ -111,7 +109,6 @@
   </style>
 </head>
 
-
 <body>
 
   <div class="box">
@@ -124,12 +121,9 @@
       Create your account
     </p>
 
-
     <form id="registerForm">
 
-      <label for="name">
-        Full Name
-      </label>
+      <label for="name">Full Name</label>
 
       <input
         type="text"
@@ -138,10 +132,7 @@
         required
       >
 
-
-      <label for="email">
-        Email
-      </label>
+      <label for="email">Email</label>
 
       <input
         type="email"
@@ -150,19 +141,15 @@
         required
       >
 
-
-      <label for="password">
-        Password
-      </label>
+      <label for="password">Password</label>
 
       <input
         type="password"
         id="password"
-        placeholder="Create a password"
+        placeholder="At least 6 characters"
         minlength="6"
         required
       >
-
 
       <label for="confirmPassword">
         Confirm Password
@@ -171,43 +158,26 @@
       <input
         type="password"
         id="confirmPassword"
-        placeholder="Confirm your password"
+        placeholder="Confirm password"
         minlength="6"
         required
       >
 
-
-      <button
-        type="submit"
-        id="registerBtn">
-
+      <button type="submit" id="registerBtn">
         Create Account
-
       </button>
-
 
       <div id="message"></div>
 
     </form>
 
-
     <div class="login">
-
       Already have an account?
-
-      <a href="login.html">
-        Login
-      </a>
-
+      <a href="login.html">Login</a>
     </div>
 
-
-    <a
-      href="index.html"
-      class="back">
-
+    <a href="index.html" class="back">
       ← Back to Home
-
     </a>
 
   </div>
@@ -216,20 +186,42 @@
   <script type="module">
 
     import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+    import {
+      getAuth,
       createUserWithEmailAndPassword
     } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
 
-    import {
-      doc,
-      setDoc
-    } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    const firebaseConfig = {
+
+      apiKey:
+        "AIzaSyAcjwzfF1qwTilmhDcKc1WU2DCJqtNWprE",
+
+      authDomain:
+        "digital-equb-9f71e.firebaseapp.com",
+
+      projectId:
+        "digital-equb-9f71e",
+
+      storageBucket:
+        "digital-equb-9f71e.firebasestorage.app",
+
+      messagingSenderId:
+        "973949186370",
+
+      appId:
+        "1:973949186370:web:825cc92317f8d97a2998db"
+    };
 
 
-    import {
-      auth,
-      db
-    } from "./firebase-config.js";
+    const app =
+      initializeApp(firebaseConfig);
+
+    const auth =
+      getAuth(app);
 
 
     const form =
@@ -244,35 +236,22 @@
 
     form.addEventListener(
       "submit",
-      async (event) => {
+      async function(event) {
 
         event.preventDefault();
 
 
         const name =
-          document
-            .getElementById("name")
-            .value
-            .trim();
-
+          document.getElementById("name").value.trim();
 
         const email =
-          document
-            .getElementById("email")
-            .value
-            .trim();
-
+          document.getElementById("email").value.trim();
 
         const password =
-          document
-            .getElementById("password")
-            .value;
-
+          document.getElementById("password").value;
 
         const confirmPassword =
-          document
-            .getElementById("confirmPassword")
-            .value;
+          document.getElementById("confirmPassword").value;
 
 
         message.textContent = "";
@@ -286,7 +265,6 @@
             "❌ Passwords do not match.";
 
           return;
-
         }
 
 
@@ -298,7 +276,6 @@
             "❌ Password must be at least 6 characters.";
 
           return;
-
         }
 
 
@@ -310,26 +287,10 @@
 
         try {
 
-          const result =
-            await createUserWithEmailAndPassword(
-              auth,
-              email,
-              password
-            );
-
-
-          const user =
-            result.user;
-
-
-          await setDoc(
-            doc(db, "users", user.uid),
-            {
-              name: name,
-              email: email,
-              contribution: 0,
-              createdAt: new Date()
-            }
+          await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
           );
 
 
@@ -340,24 +301,20 @@
 
 
           button.textContent =
-            "Success ✓";
+            "Account Created ✓";
 
 
-          setTimeout(() => {
+          setTimeout(function() {
 
             window.location.href =
               "login.html";
 
-          }, 1200);
+          }, 1500);
 
 
         } catch (error) {
 
-          console.error(
-            "Registration error:",
-            error
-          );
-
+          console.error(error);
 
           message.style.color = "red";
 
@@ -370,15 +327,19 @@
             message.textContent =
               "❌ This email already has an account.";
 
-          } else if (
+          }
+
+          else if (
             error.code ===
             "auth/invalid-email"
           ) {
 
             message.textContent =
-              "❌ Please enter a valid email.";
+              "❌ Invalid email address.";
 
-          } else if (
+          }
+
+          else if (
             error.code ===
             "auth/weak-password"
           ) {
@@ -386,20 +347,22 @@
             message.textContent =
               "❌ Password must be at least 6 characters.";
 
-          } else if (
+          }
+
+          else if (
             error.code ===
-            "auth/operation-not-allowed"
+            "auth/network-request-failed"
           ) {
 
             message.textContent =
-              "❌ Email/Password sign-in is not enabled in Firebase.";
+              "❌ Check your internet connection.";
 
-          } else {
+          }
+
+          else {
 
             message.textContent =
-              "❌ " +
-              (error.message ||
-              "Account creation failed.");
+              "❌ " + error.message;
 
           }
 
@@ -417,5 +380,4 @@
   </script>
 
 </body>
-
-  </html>
+</html>
