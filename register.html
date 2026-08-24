@@ -1,226 +1,125 @@
-<!DOCTYPE html>
-<html lang="en">
+<script type="module">
 
-<head>
+  import {
+    createUserWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
 
-  <meta charset="UTF-8">
+  import {
+    doc,
+    setDoc
+  } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
+  import {
+    auth,
+    db
+  } from "./firebase-config.js";
 
-  <title>Create Account | Digital Equb</title>
 
-  <style>
+  const form = document.querySelector("form");
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+  form.addEventListener("submit", async (event) => {
 
-      font-family: Arial, sans-serif;
+    event.preventDefault();
 
-      background:
-        linear-gradient(
-          135deg,
-          #111827,
-          #243b55
+
+    const name =
+      document.getElementById("name").value.trim();
+
+    const email =
+      document.getElementById("email").value.trim();
+
+    const password =
+      document.getElementById("password").value;
+
+
+    const button =
+      form.querySelector("button");
+
+
+    button.disabled = true;
+    button.textContent = "Creating account...";
+
+
+    try {
+
+      const userCredential =
+        await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
         );
+
+
+      const user =
+        userCredential.user;
+
+
+      await setDoc(
+        doc(db, "users", user.uid),
+        {
+          name: name,
+          email: email,
+          createdAt: new Date()
+        }
+      );
+
+
+      alert("✅ Account created successfully!");
+
+
+      window.location.href =
+        "dashboard.html";
+
+
+    } catch (error) {
+
+      console.error(error);
+
+
+      if (
+        error.code ===
+        "auth/email-already-in-use"
+      ) {
+
+        alert(
+          "❌ This email already has an account."
+        );
+
+      } else if (
+        error.code ===
+        "auth/weak-password"
+      ) {
+
+        alert(
+          "❌ Password must be at least 6 characters."
+        );
+
+      } else if (
+        error.code ===
+        "auth/invalid-email"
+      ) {
+
+        alert(
+          "❌ Please enter a valid email."
+        );
+
+      } else {
+
+        alert(
+          "❌ Account creation failed."
+        );
+
+      }
+
+
+      button.disabled = false;
+
+      button.textContent =
+        "Create Account";
+
     }
 
-    .box {
-      width: 100%;
-      max-width: 420px;
+  });
 
-      background: white;
-
-      padding: 35px 25px;
-
-      border-radius: 18px;
-
-      box-shadow:
-        0 15px 40px rgba(0,0,0,.25);
-    }
-
-    .logo {
-      text-align: center;
-      font-size: 30px;
-      font-weight: bold;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #667085;
-      margin-bottom: 28px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 7px;
-      font-weight: bold;
-    }
-
-    input {
-      width: 100%;
-
-      padding: 13px;
-
-      margin-bottom: 17px;
-
-      border:
-        1px solid #d0d5dd;
-
-      border-radius: 9px;
-
-      font-size: 16px;
-
-      outline: none;
-    }
-
-    input:focus {
-      border-color: #f5b942;
-    }
-
-    button {
-      width: 100%;
-
-      padding: 14px;
-
-      border: none;
-
-      border-radius: 9px;
-
-      background: #f5b942;
-
-      color: #111827;
-
-      font-size: 16px;
-
-      font-weight: bold;
-
-      cursor: pointer;
-    }
-
-    .login {
-      text-align: center;
-
-      margin-top: 20px;
-
-      color: #667085;
-    }
-
-    .login a,
-    .back {
-      color: #111827;
-
-      font-weight: bold;
-
-      text-decoration: none;
-    }
-
-    .back {
-      display: block;
-
-      text-align: center;
-
-      margin-top: 20px;
-    }
-
-  </style>
-
-</head>
-
-
-<body>
-
-  <div class="box">
-
-    <div class="logo">
-      💰 Digital Equb
-    </div>
-
-
-    <p class="subtitle">
-      Create your account
-    </p>
-
-
-    <form>
-
-      <label for="name">
-        Full Name
-      </label>
-
-      <input
-        type="text"
-        id="name"
-        placeholder="Enter your name"
-        required
-      >
-
-
-      <label for="email">
-        Email
-      </label>
-
-      <input
-        type="email"
-        id="email"
-        placeholder="Enter your email"
-        required
-      >
-
-
-      <label for="password">
-        Password
-      </label>
-
-      <input
-        type="password"
-        id="password"
-        placeholder="Create a password"
-        minlength="6"
-        required
-      >
-
-
-      <button type="submit">
-        Create Account
-      </button>
-
-    </form>
-
-
-    <div class="login">
-
-      Already have an account?
-
-      <a href="login.html">
-        Login
-      </a>
-
-    </div>
-
-
-    <a
-      href="index.html"
-      class="back">
-
-      ← Back to Home
-
-    </a>
-
-  </div>
-
-</body>
-
-</html>
+      </script>
